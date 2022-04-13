@@ -9,7 +9,7 @@ from encounter import *
 
 
 newPlayer = Player("Jimmy")
-pikachu = Pokemon("Pikachu", 30, 30, "tackle", "Electric")
+pikachu = Pokemon("Pikachu", 30, 30, pokeMoves[0], "Electric")
 newPlayer.pokemon.append(pikachu)
 
 

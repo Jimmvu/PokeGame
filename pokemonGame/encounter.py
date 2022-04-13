@@ -25,10 +25,10 @@ def battle(randPoke, newPlayer):
     currentPokemon = newPlayer.pokemon[0]
     while(battleState == True):
         while(userInput not in ["attack", "pokemon", "items", "run"]):
-            print(f"Enemy {randPoke.name}: {randPoke.hp}")
+            print(f"Enemy {randPoke.name}: {randPoke.hp} / {randPoke.maxHP}")
             print("What will you do?")
             print(
-                f"{currentPokemon.name}: hp {currentPokemon.hp}")
+                f"{currentPokemon.name}: hp {currentPokemon.hp} / {currentPokemon.maxHP}")
             print("=====================")
             print("| Attack    Pokemon |")
             print("| Items       Run   |")
@@ -40,7 +40,7 @@ def battle(randPoke, newPlayer):
                 print(f"battleState: {battleState}")
                 if(battleState == True):
                     userInput = ""
-            if userInput == "attack":
+            elif userInput == "attack":
                 Attack(currentPokemon, randPoke)
                 if(randPoke.hp <= 0):
                     print(f"Enemy {randPoke.name} fainted")
@@ -48,9 +48,23 @@ def battle(randPoke, newPlayer):
                     randPoke.hp = randPoke.maxHP
                 else:
                     userInput = ""
-            if userInput == "items":
+            elif userInput == "items":
                 showItems(newPlayer, currentPokemon)
                 userInput = ""
+            elif userInput == "pokemon":
+                selectPokemon(currentPokemon, newPlayer)
+                userInput = ""
+
+
+def selectPokemon(currentPokemon, newPlayer):
+    userInput = ""
+    listPokemon = []
+    for pokemon in newPlayer.pokemon:
+        listPokemon.append(f"{pokemon.name} hp: {pokemon.hp}")
+    while userInput not in listPokemon:
+        print("Choose a pokemon to switch out to")
+        print(listPokemon)
+        userInput = input("> ")
 
 # Attack Method
 
@@ -58,21 +72,25 @@ def battle(randPoke, newPlayer):
 def Attack(currentPokemon, randPoke):
     userInput = ""
     # Grabs the moves list of move dictionaries and parses the keys as a list
-    listAbilities = currentPokemon.moves
-    print(currentPokemon.moves)
-    # for attack in currentPokemon.moves[0]:
-    #     print(f"{attack.name}: {attack.pp}")
+    listAbilities = currentPokemon.moves[0].keys()
 
     while(userInput not in listAbilities):
-        print(listAbilities)
+        # Print out usable moves and their relative pp:
+        for atk in currentPokemon.moves:
+            for name in atk:
+                print(
+                    f"{atk[name]['name']} pp: {atk[name]['pp']} / {atk[name]['maxPP']}")
+
         print("---------------------------\nChoose a Move\n---------------------------")
+
         userInput = input("\n>").lower()
 
     damage = pokeMoves[0][userInput]["dmg"]
+    print(damage)
     print(
         f"{currentPokemon.name} used {userInput} and dealt {damage} damage")
     randPoke.hp -= damage
-    currentPokemon.moves[0]["pp"] -= 1
+    currentPokemon.moves[0][userInput]['pp'] -= 1
     enemyAttacks(currentPokemon, randPoke)
 
 # Run Method
@@ -98,11 +116,12 @@ def showItems(newPlayer, currentPokemon):
     userInput = input("> ").lower()
     print(str(newPlayer.inventory[0]["potions"]), "Huh")
     try:
+        # Using a potion
         if userInput == "potions" and newPlayer.inventory[0][userInput] > 0:
             print(f"You used a potion to heal {currentPokemon.name}")
             newPlayer.inventory[0][userInput] -= 1
             currentPokemon.hp = currentPokemon.maxHP
-        # Implement pokeballs later
+        # Using a Pokeball
         elif userInput == "pokeballs" and newPlayer.inventory[0][userInput] > 0:
             print(f"You used a pokeball")
             newPlayer.inventory[0][userInput] -= 1
