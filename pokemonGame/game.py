@@ -7,7 +7,16 @@ from monsters import *
 from encounter import *
 from playsound import *
 
+# TODO
+# fix run bug where the player pokemon can go under 0
+# Allow player to choose starter
+# A Better game end
+# Let player switch and heal pokemon outside of battle
+# fix battlestate logic
+# refactor code
 
+# TODO
+# Hardcoded / need to implement player choice for starter
 newPlayer = Player("Player")
 pikachu = Pokemon("Pikachu", 30, 30, pokeMoves[0], "Electric")
 newPlayer.pokemon.append(pikachu)
@@ -54,6 +63,7 @@ currentRoom = 'S Forest'
 showInstructions()
 
 # loop forever
+
 while True:
     clear()
     if len(newPlayer.pokemon) >= 3 and currentRoom == 'Forest End':

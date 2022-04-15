@@ -1,6 +1,5 @@
-from logging import exception
+from copy import copy
 import random
-import os
 import sys
 
 from monsters import *
@@ -52,6 +51,9 @@ def battle(randPoke, newPlayer):
             # Player attacks
             elif userInput == "attack":
                 Attack(currentPokemon, randPoke)
+                # TODO
+                # Need to seperate the check method to work with when enemy attacks when you run or use item / bug
+
                 # Enemy pokemon faints
                 if(randPoke.hp <= 0):
                     print(f"Enemy {randPoke.name} fainted")
@@ -92,24 +94,28 @@ def battle(randPoke, newPlayer):
 def selectPokemon(currentPokemon, newPlayer):
     userInput = ""
     listPokemon = []
+    # List current pokemon
     for pokemon in newPlayer.pokemon:
         listPokemon.append(f"{pokemon.name} {pokemon.hp} / {pokemon.maxHP}")
-
+    # Player chooses index of pokemon to be swapped
     while userInput not in range(0, len(listPokemon)):
         index = 0
         print(f"Choose a pokemon to switch out to: 0 - {len(listPokemon)}")
         for element in listPokemon:
             print(f"{index} : {element}")
             index += 1
+        # Try if user enters a string
         try:
             userInput = int(input("> "))
         except:
             print("Invalid Input")
+    # If that pokemon's health is greater than 0 switch
     if(newPlayer.pokemon[userInput].hp > 0):
         print(
             f"You switched out {currentPokemon.name} for {newPlayer.pokemon[userInput].name}")
         newPlayer.pokemon[0], newPlayer.pokemon[userInput] = newPlayer.pokemon[userInput], newPlayer.pokemon[0]
         enterClear()
+    # Else recall the function
     else:
         print("You can't do that")
         enterClear()
@@ -184,14 +190,16 @@ def showItems(newPlayer, currentPokemon, randPoke):
     else:
         if battleState:
             return True
-        return False
+        else:
+            randPoke.hp = randPoke.maxHP
+            return False
 
 # Catching the Pokemon
 
 
 def catchPokemon(newPlayer, currentPokemon, randPoke):
     tier = []
-
+    newPoke = copy(randPoke)
     # Check randPoke health
     if randPoke.hp > randPoke.maxHP/2:
         tier = [1, 2, 3, 4, 5]
@@ -206,7 +214,7 @@ def catchPokemon(newPlayer, currentPokemon, randPoke):
             return False
         else:
             print(f"{randPoke.name} has been caught")
-            newPlayer.pokemon.append(randPoke)
+            newPlayer.pokemon.append(newPoke)
             enterClear()
             return False
 
@@ -222,6 +230,8 @@ def catchPokemon(newPlayer, currentPokemon, randPoke):
 
 
 def enemyAttacks(currentPokemon, randPoke):
+    # TODO
+    # Make it not hardcoded
     if randPoke.hp > 0:
         print(f"{randPoke.name} does 5 damage to {currentPokemon.name}")
         currentPokemon.hp -= 5

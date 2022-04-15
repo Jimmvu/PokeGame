@@ -15,7 +15,8 @@ route31 = {
     },
     'M Forest': {
         'west': 'MW Forest',
-        'east': 'ME Forest'
+        'east': 'ME Forest',
+        'item': 'pokeball'
     },
 
     'SE Forest': {
@@ -34,5 +35,6 @@ route31 = {
     },
     'Forest End': {
         'east': 'NE Forest',
+        'item': "pokeball"
     }
 }
