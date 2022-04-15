@@ -1,9 +1,11 @@
+import imp
 import requests
 
 from pokemon import*
+from moves import *
 
 pokeURL = "https://pokeapi.co/api/v2/pokemon/"
-
+# getPoke = ["rattata","pidgey"]
 poke1 = requests.get(f"{pokeURL}rattata").json()
 poke2 = requests.get(f"{pokeURL}pidgey").json()
 
@@ -23,7 +25,7 @@ def createPokemon(pokeList):
         hp = poke['stats'][0]['base_stat']
         maxHP = hp
         element = poke['types'][0]['type']['name']
-        moves = []
+        moves = enemyMoves[0]
 
         monstDict['poke_'+str(i)] = (Pokemon(name, hp, maxHP, moves, element))
         i += 1

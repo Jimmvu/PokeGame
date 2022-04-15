@@ -1,14 +1,14 @@
 import random
-import os
 
 from pokemon import *
 from player import *
 from routes import *
 from monsters import *
 from encounter import *
+from playsound import *
 
 
-newPlayer = Player("Jimmy")
+newPlayer = Player("Player")
 pikachu = Pokemon("Pikachu", 30, 30, pokeMoves[0], "Electric")
 newPlayer.pokemon.append(pikachu)
 
@@ -17,7 +17,7 @@ def showInstructions():
     # print a main menu and the commands
     print('''
     Pokemon Game
-    Objective: Get to Lavender town with 6 pokemon
+    Objective: Get to Lavender town with 3 or more pokemon
     ========
     Commands:
     go [direction]
@@ -25,6 +25,7 @@ def showInstructions():
     pokemon
     items
     ''')
+    enterClear()
 
 
 def showStatus():
@@ -40,8 +41,10 @@ def showStatus():
 
 
 def showPokemon():
+    clear()
     for poke in newPlayer.pokemon:
-        print(poke.name)
+        print(f"{poke.name} HP: {poke.hp} / {poke.maxHP}")
+    enterClear()
 
 
 # A dictionary linking a room to other rooms
@@ -52,9 +55,13 @@ showInstructions()
 
 # loop forever
 while True:
-
+    clear()
+    if len(newPlayer.pokemon) >= 3 and currentRoom == 'Forest End':
+        print("You caught enough pokemon and are ready for your next Adventure")
+        print("YOU WIN")
+        enterClear()
+        sys.exit()
     showStatus()
-
     # get the player's next 'move'
     # .split() breaks it up into an list array
     # eg typing 'go east' would give the list:
@@ -73,20 +80,21 @@ while True:
         if move[1] in route31[currentRoom]:
             # set the current room to the new room
             currentRoom = route31[currentRoom][move[1]]
-            if(True):  # random.choice([True, False]) == True
+            if random.choice([True, False]) == True:
                 randomEncounter(newPlayer)
         # there is no door (link) to the new room
         else:
             print('You can\'t go that way!')
+            enterClear()
 
     # if they type 'get' first
     if move[0] == 'get':
         # if the room contains an item, and the item is the one they want to get
         if "item" in route31[currentRoom] and move[1] in route31[currentRoom]['item']:
             # add the item to their inventory
-            # inventory += [move[1]]
-            # display a helpful message
+            item = route31[currentRoom]['item']
             print(move[1] + ' got!')
+            newPlayer.inventory[0][item + 's'] += 1
             # delete the item from the room
             del route31[currentRoom]['item']
         # otherwise, if the item isn't there to get

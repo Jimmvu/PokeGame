@@ -31,5 +31,8 @@ route31 = {
     'NE Forest': {
         'west': 'Forest End',
         'south': 'ME Forest'
+    },
+    'Forest End': {
+        'east': 'NE Forest',
     }
 }
